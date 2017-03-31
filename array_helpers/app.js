@@ -315,7 +315,6 @@ var buick = cars.find(function(car) {
 
 console.log(buick);
 
-*/
 
 var posts = [{ id: 1, title: 'New Post 1'}, { id: 2, title: 'Old Post 2'}];
 
@@ -330,6 +329,9 @@ function postForComment(posts, comment) {
 var post = postForComment(posts, comment);
 console.log(post);
 
+*/
+
+/*
 // Coding Challenge with Find
 
 // Find the user in the users's array who is an admin.  Assign this user to the variable 'admin'.
@@ -359,7 +361,6 @@ var account = accounts.find(function(acct) {
 
 // This is a tough one!  The most common find operation is to an object that has a given property.  Rather than writing out a full function every time, it would be great if we had a shorthand syntax to find an object like this:
 
-/*
 
 findWhere(ladders, { height: '20 feet' });
 
@@ -392,5 +393,262 @@ function findWhere(array, criteria) {
 
 var ladder = findWhere(ladders, { height: 25 });
 console.log(ladder);
+
+*/
+
+
+/*
+// Every and Some helpers
+
+// with for loop
+
+var computers = [
+  { name: 'Apple', ram: 24 },
+  { name: 'Compaq', ram: 4 },
+  { name: 'Acer', ram: 32 }
+];
+
+var allComputersCanUseProgram = true;
+var onlySomeComputersCanUseProgram = false;
+
+for(var i = 0; i < computers.length; i++) {
+  var computer = computers[i];
+
+  if (computer.ram < 16) {
+    allComputersCanUseProgram = false;
+  } else {
+    onlySomeComputersCanUseProgram = true;
+  }
+}
+
+// with every and some helpers
+
+// do all of the computers have > 16 ram
+var allCompsCanUseProgram = computers.every(function(comp) {
+  return comp.ram > 16;
+});
+
+console.log(allCompsCanUseProgram); // false
+
+// do some / at least one computer have > 16 ram
+var someCompsCanUseProgram = computers.some(function(comp) {
+  return comp.ram > 16;
+});
+
+console.log(someCompsCanUseProgram); // true
+
+// Example of practical use of every helper
+
+function Field(value) {
+  this.value = value;
+}
+
+Field.prototype.validate = function() {
+  return this.value.length > 6;
+}
+
+var username = new Field("2cool");
+var password = new Field("my_password");
+var birthdate = new Field("10/10/2010");
+
+// instead of calling .validate over and over again on each field, every helper is good alternative
+
+var fields = [username, password, birthdate];
+
+// use every to validate all fields in one go and check if all pass the validations. shoudl return true/false
+
+var formIsValid = fields.every(function(field) {
+  return field.validate();
+});
+
+console.log(formIsValid); // false, since password is not > 6 characters long
+
+*/
+
+/*
+// Coding Challenges for Every and Some
+
+// Given an array of users, return 'true' if every user has submitted a request form.  Assign the result to the variable 'hasSumbmitted'.
+
+var users = [
+  { id: 21, hasSubmitted: true },
+  { id: 62, hasSubmitted: false },
+  { id: 4, hasSubmitted: true }
+];
+
+var hasSubmitted = users.every(function(user) {
+  return user.hasSubmitted;
+});
+
+
+// Given an array of network objects representing network requests, assign the boolean 'true' to the variable 'inProgress' if any network request has a 'status' of 'pending'.
+
+var requests = [
+  { url: '/photos', status: 'complete' },
+  { url: '/albums', status: 'pending' },
+  { url: '/users', status: 'failed' }
+];
+
+var inProgress = requests.some(function(request) {
+  return request.status === 'pending';
+});
+
+*/
+
+
+/*
+// Reduce helper
+
+// with for loop, getting sum of numbers array requires outside counter and adding each to the counter to save the final count in the counter var
+
+var numbers = [10,20,30];
+var sum = 0;
+
+for(var i = 0; i < numbers.length; i++) {
+  sum += numbers[i];
+}
+
+console.log(sum); // 60
+
+*/
+
+// with reduce helper, takes in function where we put  calculation code. the function takes in prev value/sum and current value (also index, array), then takes second argument which is an initial value that's passed to the function (so really it becomes the previous value) as point of where to start the sum. after iterating, it returns the sum of all the array elements
+
+// the initialVal is actually the first arg passed to the function and that keeps getting passed and added on to/changed
+
+/*
+
+array.reduce(function(prev, curr, index, array) {
+  previous.push(curr.property);
+}, initialVal);
+
+*/
+
+// reduce to add and get final sum of array elements
+/*
+var numTotal = numbers.reduce(function(sum, number) {
+  return sum + number;
+}, 0);
+
+console.log(numTotal); // 60
+
+
+// reduce to return array of strings
+
+var colors = [
+  { color: 'red' },
+  { color: 'yellow' },
+  { color: 'blue' }
+];
+
+// here our initial value for reduce is an empty array
+
+// the array will be passed as initial val every time, with new color string getting pushed into it every time it is passed in
+// goal is to return an array with colorObject color strings as elements
+
+var colorStringArray = colors.reduce(function(previous, currentVal, index, array) {
+  var currentColorString = currentVal.color;
+  previous.push(currentColorString);
+  // make sure to return the updates version of the previous value!
+  return previous
+}, []);
+
+console.log(colorStringArray);
+*/
+
+// common whiteboarding question with reduce
+
+// checking if parens in string are balanced
+
+// make function that takes string and returns boolean 
+/*
+function balancedParens(string) {
+  // first, since reduce is array helper, need to convert string to array
+
+  // ! used because the reduce will return 0 if balanced which is falsey, so negate it to return boolean of true meaning parens are balanced
+
+  return !string.split("").reduce(function(prev, curr) {
+    if (prev < 0) { return prev; }
+    // since negative means we're starting with a closing parenthesis so unbalanced
+    if (curr === "(") { return ++prev; }
+    if (curr === ")") { return --prev }
+    return prev;
+  }, 0);
+
+  // initial value will be counter starting at 0, every time have opening parenthesis increase counter by 1, every time closing parenthesis decrease counter by 1
+
+  // at end, if have counter greater than 0, then has to be unbalanced
+}
+
+var isBalanced = balancedParens("(((("); // should get false, unbalanced
+console.log(isBalanced); // false
+
+var isNotBalanced = balancedParens("(()())");
+console.log(isNotBalanced); // true
+*/
+
+/*
+
+Note: difference between number++ and ++number
+Using the incrementor before a variable will first increment the value of the variable and then use this value.
+Using the incrementor after a variable will use the current value of the variable, and then increment the variable after.
+
+*/
+
+/*
+// Coding challenges with reduce
+
+// Use the 'reduce' helper to find the sum of all the distances traveled.  Assign the result to the variable 'totalDistance'
+
+var trips = [{ distance: 34 }, { distance: 12 } , { distance: 1 }];
+
+var totalDistance = trips.reduce(function(prev, curr) {
+   return  prev + curr.distance;
+}, 0);
+
+console.log(totalDistance);
+
+
+// Use the 'reduce' helper to create an object that tallies the number of sitting and standing desks.  The object returned should have the form '{ sitting: 3, standing: 2 }'.  The initial value has been provided to you.
+
+
+var desks = [
+  { type: 'sitting' },
+  { type: 'standing' },
+  { type: 'sitting' },
+  { type: 'sitting' },
+  { type: 'standing' }
+];
+
+var deskTypes = desks.reduce(function(prev, curr) {
+    if ( curr.type === 'sitting') {
+      prev.sitting++;
+    } else if (curr.type === 'standing') {
+      prev.standing++;
+    }
+    return prev
+}, { sitting: 0, standing: 0 });
+
+console.log(deskTypes);
+
+// Another really hard one!  Write a function called 'unique' that will remove all the duplicate values from an array.
+
+// For example, given the following array:
+var numbers = [1, 1, 2,0, 3, 0, 4, 4];
+
+// Your function should return [1, 2, 3, 4]
+
+function unique(array) {
+  return array.reduce(function(prev, current) {
+    if (prev.indexOf(current) === -1 ) {
+      prev.push(current)
+    }
+    return prev
+  }, []);
+}
+
+var uniqueResult = unique(numbers);
+console.log(uniqueResult);
+
 */
 
